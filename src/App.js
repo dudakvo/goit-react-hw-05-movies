@@ -1,23 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import { Switch, Route } from 'react-router-dom';
+import AppBar from './components/AppBar';
+import HomePage from './components/HomePage';
+import Movies from './components/Movies';
+import MoviesDetailPage from './components/MovieDetailsPage';
+
+// '/' - компонент <HomePage>, домашняя страница со списком популярных кинофильмов.
+// '/movies' - компонент <MoviesPage>, страница поиска фильмов по ключевому слову.
+// '/movies/:movieId' - компонент <MovieDetailsPage>, страница с детальной информацией о кинофильме.
+// /movies/:movieId/cast - компонент <Cast>, информация о актерском составе. Рендерится на странице <MovieDetailsPage>.
+// /movies/:movieId/reviews - компонент <Reviews>, информация об обзорах. Рендерится на странице <MovieDetailsPage>.
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AppBar></AppBar>
+      <Switch>
+        <Route path="/" exact>
+          <HomePage></HomePage>
+        </Route>
+        <Route path="/movies" exact>
+          <Movies> </Movies>
+          {/* {<MoviesDetailPage></MoviesDetailPage>} */}
+        </Route>
+        <Route>
+          <HomePage></HomePage>
+        </Route>
+      </Switch>
     </div>
   );
 }
