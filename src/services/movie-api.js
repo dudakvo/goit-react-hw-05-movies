@@ -17,11 +17,14 @@ function getmovieObject(resultJSON) {
       : 'not found',
   }));
 
-  const returnObject = {
+  // const returnObject = {
+  //   totalPages: resultJSON.total_pages,
+  //   movies: filmArray,
+  // };
+  return {
     totalPages: resultJSON.total_pages,
     movies: filmArray,
   };
-  return returnObject;
 }
 
 export async function getTrendinMovies(page = 1) {
@@ -59,10 +62,10 @@ export async function getNamesGenre(genreIDArray) {
   return genreNames;
 }
 
-export async function movieSearchByQuery(queryString) {
+export async function movieSearchByQuery(queryString, page = 1) {
   //https://api.themoviedb.org/3/search/movie?api_key=<<api_key>>&language=en-US&page=1&include_adult=false
 
-  const request_url = `${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&page=1&include_adult=false&query=${queryString}`;
+  const request_url = `${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&page=${page}&include_adult=false&query=${queryString}`;
   console.log(
     '🚀 ~ file: movie-api.js ~ line 62 ~ movieSearchByQuery ~ request_url',
     request_url,
@@ -74,6 +77,21 @@ export async function movieSearchByQuery(queryString) {
       `Некоректний результат запиту status code: ${fetchResponse.status}`,
     );
   }
-  const filmJSON = await fetchResponse.json();
-  console.log(filmJSON);
+  const movieJSON = await fetchResponse.json();
+  return getmovieObject(movieJSON);
+}
+
+export async function getMovieByID(movieID) {
+  //https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
+  const request_url = `${BASE_URL}movie/${movieID}?api_key=${API_KEY}&language=en-US`;
+}
+
+export async function getCastMovie(movieID) {
+  //https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>&language=en-US
+  const request_url = `${BASE_URL}movie/${movieID}/credits?api_key=${API_KEY}&language=en-US`;
+}
+
+export async function getReviews({ movieID, page = 1 }) {
+  //https://api.themoviedb.org/3/movie/{movie_id}/reviews?api_key=<<api_key>>&language=en-US&page=1
+  const request_url = `${BASE_URL}movie/${movieID}/reviews?api_key=<<api_key>>&language=en-US&page=${page}`;
 }

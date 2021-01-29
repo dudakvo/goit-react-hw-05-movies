@@ -1,7 +1,10 @@
 import { getTrendinMovies } from '../../services/movie-api';
 import { useState, useEffect } from 'react';
 import Pagination from 'react-pagination-library';
+
 import Movie from '../Movie';
+import MoviesList from '../MoviesList';
+
 import 'react-pagination-library/build/css/index.css';
 import styles from './HomePage.module.css';
 
