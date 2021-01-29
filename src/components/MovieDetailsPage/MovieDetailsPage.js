@@ -1,14 +1,19 @@
 import { useParams, NavLink, Route, useRouteMatch } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import notFoundIMG from '../../img/notFound.jpg';
 
+import notFoundIMG from '../../img/notFound.jpg';
 import { getMovieByID } from '../../services/movie-api';
+import Cast from '../Cast';
+import Reviews from '../Reviews';
 
 import s from './MovieDetailsPage.module.css';
+import userEvent from '@testing-library/user-event';
 
 export default function MovieDetailsPage() {
   const { movieID } = useParams();
   const [movieDetails, setMovieDetails] = useState();
+  const { url, path } = useRouteMatch();
+
   useEffect(() => {
     getMovieByID(movieID).then(details => setMovieDetails(details));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -26,23 +31,57 @@ export default function MovieDetailsPage() {
       vote,
     } = movieDetails;
     return (
-      <div className={s.movie_details}>
-        <h1>{title}</h1>
-        {poster ? (
-          <img src={poster} alt={title} height="300px" />
-        ) : (
-          <img src={notFoundIMG} alt={title} height="300px" />
-        )}
-        <h2>{tagline}</h2>
-        {homepage && <a href={homepage}>{homepage}</a>}
-        <p>Genre: {genres.map(genre => genre)}</p>
-        <p>
-          vote:<span>{vote}</span>
-        </p>
-        <p>
-          runtime:<span>{runtime}</span>min
-        </p>
-        <p>{overview}</p>
+      <div className={s.detailsContainer}>
+        <div className={s.movie_details}>
+          <h1>{title}</h1>
+          {poster ? (
+            <img src={poster} alt={title} height="300px" />
+          ) : (
+            <img src={notFoundIMG} alt={title} height="300px" />
+          )}
+          <h2>{tagline}</h2>
+          {homepage && <a href={homepage}>{homepage}</a>}
+          <p>
+            Genre: <span className={s.value}>{genres.toString()}</span>
+          </p>
+          <p>
+            <span className={s.vote}>
+              vote:<span className={s.value}>{vote}</span>
+            </span>
+            <span className={s.runtime}>
+              runtime:<span className={s.value}>{runtime}</span>min
+            </span>
+          </p>
+          <p>{overview}</p>
+          <ul className={s.nav}>
+            <li>
+              <NavLink
+                to={`${url}/cast`}
+                className={s.link}
+                activeClassName={s.activeLink}
+              >
+                Cast
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={`${url}/reviews`}
+                className={s.link}
+                activeClassName={s.activeLink}
+              >
+                Reviews
+              </NavLink>
+            </li>
+          </ul>
+        </div>
+        <div className={s.movie_details}>
+          <Route path={`${path}/cast`} exact>
+            <Cast movieID={movieID} />
+          </Route>
+          <Route path={`${path}/reviews`} exact>
+            <Reviews movieID={movieID} />
+          </Route>
+        </div>
       </div>
     );
   }

@@ -108,6 +108,27 @@ export async function getMovieByID(movieID) {
 export async function getCastMovie(movieID) {
   //https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>&language=en-US
   const request_url = `${BASE_URL}movie/${movieID}/credits?api_key=${API_KEY}&language=en-US`;
+
+  const fetchResponse = await fetch(request_url);
+  if (fetchResponse.status !== 200) {
+    throw new Error(
+      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+    );
+  }
+  const castJSON = await fetchResponse.json();
+  // console.log(
+  //   '🚀 ~ file: movie-api.js ~ line 91 ~ getMovieByID ~ movieJSON',
+  //   castJSON.cast,
+  // );
+  const castArray = castJSON.cast.map(actor => ({
+    id: actor.id,
+    character: actor.character,
+    name: actor.name,
+    profile: actor.profile_path
+      ? `${IMG_BASE_URL}${actor.profile_path}`
+      : undefined,
+  }));
+  return castArray;
 }
 
 export async function getReviews({ movieID, page = 1 }) {

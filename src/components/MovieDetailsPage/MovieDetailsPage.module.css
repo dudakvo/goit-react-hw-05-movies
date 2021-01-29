@@ -1,5 +1,37 @@
 .movie_details {
-  width: 50%;
+  width: 40%;
   margin-right: auto;
   margin-left: auto;
+}
+
+.vote {
+  margin-right: 30px;
+}
+
+.value {
+  font-weight: 700;
+}
+
+.link {
+  display: inline-block;
+  text-decoration: none;
+  padding: 12px;
+  font-weight: 500;
+  color: #2a363b;
+  font-size: 18px;
+}
+
+.activeLink {
+  composes: link;
+  color: #2196f3;
+}
+
+.nav {
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.detailsContainer {
+  display: flex;
 }
