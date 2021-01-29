@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { movieSearchByQuery } from '../../services/movie-api';
 import MoviesList from '../MoviesList';

@@ -66,10 +66,6 @@ export async function movieSearchByQuery(queryString, page = 1) {
   //https://api.themoviedb.org/3/search/movie?api_key=<<api_key>>&language=en-US&page=1&include_adult=false
 
   const request_url = `${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&page=${page}&include_adult=false&query=${queryString}`;
-  console.log(
-    '🚀 ~ file: movie-api.js ~ line 62 ~ movieSearchByQuery ~ request_url',
-    request_url,
-  );
 
   const fetchResponse = await fetch(request_url);
   if (fetchResponse.status !== 200) {
@@ -84,6 +80,29 @@ export async function movieSearchByQuery(queryString, page = 1) {
 export async function getMovieByID(movieID) {
   //https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
   const request_url = `${BASE_URL}movie/${movieID}?api_key=${API_KEY}&language=en-US`;
+
+  const fetchResponse = await fetch(request_url);
+  if (fetchResponse.status !== 200) {
+    throw new Error(
+      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+    );
+  }
+  const movieJSON = await fetchResponse.json();
+  console.log(
+    '🚀 ~ file: movie-api.js ~ line 91 ~ getMovieByID ~ movieJSON',
+    movieJSON,
+  );
+  const movieDetails = {
+    homepage: movieJSON.homepage,
+    genres: movieJSON.genres.map(genre => genre.name),
+    poster: movieJSON.poster_path && `${IMG_BASE_URL}${movieJSON.poster_path}`,
+    tagline: movieJSON.tagline,
+    title: movieJSON.title,
+    runtime: movieJSON.runtime,
+    overview: movieJSON.overview,
+    vote: movieJSON.vote_average,
+  };
+  return movieDetails;
 }
 
 export async function getCastMovie(movieID) {

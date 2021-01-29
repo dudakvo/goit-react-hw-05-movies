@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import AppBar from './components/AppBar';
 import HomePage from './components/HomePage';
 import Movies from './components/Movies';
-import MoviesDetailPage from './components/MovieDetailsPage';
+import MoviesDetailsPage from './components/MovieDetailsPage';
 
 // '/' - компонент <HomePage>, домашняя страница со списком популярных кинофильмов.
 // '/movies' - компонент <MoviesPage>, страница поиска фильмов по ключевому слову.
@@ -17,14 +17,16 @@ function App() {
       <AppBar></AppBar>
       <Switch>
         <Route path="/" exact>
-          <HomePage></HomePage>
+          <HomePage />
         </Route>
         <Route path="/movies" exact>
-          <Movies> </Movies>
-          {/* {<MoviesDetailPage></MoviesDetailPage>} */}
+          <Movies />
+        </Route>
+        <Route path="/movies/:movieID">
+          <MoviesDetailsPage />
         </Route>
         <Route>
-          <HomePage></HomePage>
+          <HomePage />
         </Route>
       </Switch>
     </div>
