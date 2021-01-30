@@ -1,13 +1,19 @@
 import { useParams, NavLink, Route, useRouteMatch } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import Loader from 'react-loader-spinner';
 
 import notFoundIMG from '../../img/notFound.jpg';
 import { getMovieByID } from '../../services/movie-api';
-import Cast from '../Cast';
-import Reviews from '../Reviews';
+//import Cast from '../Cast';
+//import Reviews from '../Reviews';
 
 import s from './MovieDetailsPage.module.css';
-import userEvent from '@testing-library/user-event';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+
+const Cast = lazy(() => import('../Cast') /* webpackChunkName: "Cast" */);
+const Reviews = lazy(
+  () => import('../Reviews') /* webpackChunkName: "Reviews" */,
+);
 
 export default function MovieDetailsPage() {
   const { movieID } = useParams();
@@ -75,12 +81,14 @@ export default function MovieDetailsPage() {
           </ul>
         </div>
         <div className={s.movie_details}>
-          <Route path={`${path}/cast`} exact>
-            <Cast movieID={movieID} />
-          </Route>
-          <Route path={`${path}/reviews`} exact>
-            <Reviews movieID={movieID} />
-          </Route>
+          <Suspense fallback={<Loader type="Puff" />}>
+            <Route path={`${path}/cast`} exact>
+              <Cast movieID={movieID} />
+            </Route>
+            <Route path={`${path}/reviews`} exact>
+              <Reviews movieID={movieID} />
+            </Route>
+          </Suspense>
         </div>
       </div>
     );

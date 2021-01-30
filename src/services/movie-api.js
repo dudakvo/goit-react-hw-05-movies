@@ -88,10 +88,7 @@ export async function getMovieByID(movieID) {
     );
   }
   const movieJSON = await fetchResponse.json();
-  console.log(
-    '🚀 ~ file: movie-api.js ~ line 91 ~ getMovieByID ~ movieJSON',
-    movieJSON,
-  );
+
   const movieDetails = {
     homepage: movieJSON.homepage,
     genres: movieJSON.genres.map(genre => genre.name),
@@ -116,10 +113,7 @@ export async function getCastMovie(movieID) {
     );
   }
   const castJSON = await fetchResponse.json();
-  // console.log(
-  //   '🚀 ~ file: movie-api.js ~ line 91 ~ getMovieByID ~ movieJSON',
-  //   castJSON.cast,
-  // );
+
   const castArray = castJSON.cast.map(actor => ({
     id: actor.id,
     character: actor.character,
@@ -131,7 +125,27 @@ export async function getCastMovie(movieID) {
   return castArray;
 }
 
-export async function getReviews({ movieID, page = 1 }) {
+export async function getReviews(movieID, page = 1) {
   //https://api.themoviedb.org/3/movie/{movie_id}/reviews?api_key=<<api_key>>&language=en-US&page=1
-  const request_url = `${BASE_URL}movie/${movieID}/reviews?api_key=<<api_key>>&language=en-US&page=${page}`;
+  const request_url = `${BASE_URL}movie/${movieID}/reviews?api_key=${API_KEY}&language=en-US&page=${page}`;
+
+  const fetchResponse = await fetch(request_url);
+  if (fetchResponse.status !== 200) {
+    throw new Error(
+      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+    );
+  }
+  const reviewsJSON = await fetchResponse.json();
+
+  const reviewsObj = {
+    totalPages: reviewsJSON.total_pages,
+    reviews: reviewsJSON.results.map(review => ({
+      id: review.id,
+      author: review.author,
+      url: review.url,
+      update: review.apdate_at,
+      content: review.content,
+    })),
+  };
+  return reviewsObj;
 }
