@@ -1,5 +1,4 @@
 //https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
-
 //https://image.tmdb.org/t/p/w500/ получить картинку
 
 const API_KEY = 'f76df85c86f4c3253e784768d1d2b67c';
@@ -45,9 +44,11 @@ export async function getNamesGenre(genreIDArray) {
   const request_url = `${BASE_URL}genre/movie/list?api_key=${API_KEY}`;
   const fetchResponse = await fetch(request_url);
 
-  if (fetchResponse.status !== 200) {
-    throw new Error(
-      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+  if (!fetchResponse.ok) {
+    return Promise.reject(
+      new Error(
+        `Некоректний результат запиту status code: ${fetchResponse.status}`,
+      ),
     );
   }
 
@@ -68,9 +69,11 @@ export async function movieSearchByQuery(queryString, page = 1) {
   const request_url = `${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&page=${page}&include_adult=false&query=${queryString}`;
 
   const fetchResponse = await fetch(request_url);
-  if (fetchResponse.status !== 200) {
-    throw new Error(
-      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+  if (!fetchResponse.ok) {
+    return Promise.reject(
+      new Error(
+        `Некоректний результат запиту status code: ${fetchResponse.status}`,
+      ),
     );
   }
   const movieJSON = await fetchResponse.json();
@@ -82,11 +85,14 @@ export async function getMovieByID(movieID) {
   const request_url = `${BASE_URL}movie/${movieID}?api_key=${API_KEY}&language=en-US`;
 
   const fetchResponse = await fetch(request_url);
-  if (fetchResponse.status !== 200) {
-    throw new Error(
-      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+  if (!fetchResponse.ok) {
+    return Promise.reject(
+      new Error(
+        `Некоректний результат запиту status code: ${fetchResponse.status}`,
+      ),
     );
   }
+
   const movieJSON = await fetchResponse.json();
 
   const movieDetails = {
@@ -107,9 +113,11 @@ export async function getCastMovie(movieID) {
   const request_url = `${BASE_URL}movie/${movieID}/credits?api_key=${API_KEY}&language=en-US`;
 
   const fetchResponse = await fetch(request_url);
-  if (fetchResponse.status !== 200) {
-    throw new Error(
-      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+  if (!fetchResponse.ok) {
+    return Promise.reject(
+      new Error(
+        `Некоректний результат запиту status code: ${fetchResponse.status}`,
+      ),
     );
   }
   const castJSON = await fetchResponse.json();
@@ -130,9 +138,11 @@ export async function getReviews(movieID, page = 1) {
   const request_url = `${BASE_URL}movie/${movieID}/reviews?api_key=${API_KEY}&language=en-US&page=${page}`;
 
   const fetchResponse = await fetch(request_url);
-  if (fetchResponse.status !== 200) {
-    throw new Error(
-      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+  if (!fetchResponse.ok) {
+    return Promise.reject(
+      new Error(
+        `Некоректний результат запиту status code: ${fetchResponse.status}`,
+      ),
     );
   }
   const reviewsJSON = await fetchResponse.json();

@@ -19,12 +19,18 @@ export default function MovieDetailsPage() {
   const { movieID } = useParams();
   const [movieDetails, setMovieDetails] = useState();
   const { url, path } = useRouteMatch();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    getMovieByID(movieID).then(details => setMovieDetails(details));
+    getMovieByID(movieID)
+      .then(details => setMovieDetails(details))
+      .catch(error => setError(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (error) {
+    return <h1>{error.message}</h1>;
+  }
   if (movieDetails) {
     const {
       homepage,

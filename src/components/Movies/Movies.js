@@ -9,6 +9,7 @@ export default function Movies() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (searchQuery === '') {
@@ -16,10 +17,12 @@ export default function Movies() {
     }
     setCurrentPage(1);
     const moviePromise = movieSearchByQuery(searchQuery);
-    moviePromise.then(moviesObj => {
-      setMovies(moviesObj.movies);
-      setTotalPages(moviesObj.totalPages);
-    });
+    moviePromise
+      .then(moviesObj => {
+        setMovies(moviesObj.movies);
+        setTotalPages(moviesObj.totalPages);
+      })
+      .catch(error => setError(error));
   }, [searchQuery]);
 
   useEffect(() => {
@@ -27,13 +30,18 @@ export default function Movies() {
       return;
     }
     const moviePromise = movieSearchByQuery(searchQuery, currentPage);
-    moviePromise.then(moviesObj => {
-      setMovies(moviesObj.movies);
-      setTotalPages(moviesObj.totalPages);
-    });
+    moviePromise
+      .then(moviesObj => {
+        setMovies(moviesObj.movies);
+        setTotalPages(moviesObj.totalPages);
+      })
+      .catch(error => setError(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  if (error) {
+    return <h1>error.message</h1>;
+  }
   return (
     <>
       <h1>Movies page</h1>
