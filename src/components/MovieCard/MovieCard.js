@@ -1,13 +1,7 @@
 import styles from './MovieCard.module.css';
 import notFoundIMG from '../../img/notFound.jpg';
 
-export default function MovieCard({
-  movieName,
-  movieIMG,
-  movieGenre,
-  movieRating,
-  movieDescription,
-}) {
+export default function MovieCard({ movieName, movieIMG }) {
   return (
     <div className={styles.movie_card}>
       <p>{movieName ? movieName : 'movieName'}</p>
@@ -16,11 +10,6 @@ export default function MovieCard({
       ) : (
         <img src={movieIMG} alt="" className={styles.movie_poster} />
       )}
-
-      <span>{movieRating ? movieRating : 'movieRating'}</span>
-      <span>{movieGenre ? movieGenre : 'movieGenre'}</span>
-      <p>{movieDescription}</p>
-      <p> </p>
     </div>
   );
 }

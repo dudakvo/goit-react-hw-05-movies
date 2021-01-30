@@ -8,7 +8,6 @@ const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w500/';
 function getmovieObject(resultJSON) {
   const filmArray = resultJSON.results.map(film => ({
     id: film.id,
-    genre: getNamesGenre(film.genre_ids),
     popularity: film.popularity,
     title: film.title,
     posterPath: film.poster_path
@@ -16,10 +15,6 @@ function getmovieObject(resultJSON) {
       : 'not found',
   }));
 
-  // const returnObject = {
-  //   totalPages: resultJSON.total_pages,
-  //   movies: filmArray,
-  // };
   return {
     totalPages: resultJSON.total_pages,
     movies: filmArray,
@@ -37,30 +32,6 @@ export async function getTrendinMovies(page = 1) {
   const movieJSON = await fetchResponse.json();
 
   return getmovieObject(movieJSON);
-}
-
-export async function getNamesGenre(genreIDArray) {
-  //https://api.themoviedb.org/3/ genre/movie/list?api_key=<<api_key>>&language=en-US
-  const request_url = `${BASE_URL}genre/movie/list?api_key=${API_KEY}`;
-  const fetchResponse = await fetch(request_url);
-
-  if (!fetchResponse.ok) {
-    return Promise.reject(
-      new Error(
-        `Некоректний результат запиту status code: ${fetchResponse.status}`,
-      ),
-    );
-  }
-
-  const genresJSON = await fetchResponse.json();
-  const genreNames = genreIDArray.map(genre => {
-    const genreObject = genresJSON.genres.find(genreObject => {
-      return genreObject.id === genre;
-    });
-
-    return genreObject ? genreObject.name : null;
-  });
-  return genreNames;
 }
 
 export async function movieSearchByQuery(queryString, page = 1) {
