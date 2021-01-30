@@ -64,8 +64,6 @@ export async function getNamesGenre(genreIDArray) {
 }
 
 export async function movieSearchByQuery(queryString, page = 1) {
-  //https://api.themoviedb.org/3/search/movie?api_key=<<api_key>>&language=en-US&page=1&include_adult=false
-
   const request_url = `${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&page=${page}&include_adult=false&query=${queryString}`;
 
   const fetchResponse = await fetch(request_url);
@@ -81,7 +79,6 @@ export async function movieSearchByQuery(queryString, page = 1) {
 }
 
 export async function getMovieByID(movieID) {
-  //https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
   const request_url = `${BASE_URL}movie/${movieID}?api_key=${API_KEY}&language=en-US`;
 
   const fetchResponse = await fetch(request_url);
@@ -109,7 +106,6 @@ export async function getMovieByID(movieID) {
 }
 
 export async function getCastMovie(movieID) {
-  //https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>&language=en-US
   const request_url = `${BASE_URL}movie/${movieID}/credits?api_key=${API_KEY}&language=en-US`;
 
   const fetchResponse = await fetch(request_url);
@@ -134,7 +130,6 @@ export async function getCastMovie(movieID) {
 }
 
 export async function getReviews(movieID, page = 1) {
-  //https://api.themoviedb.org/3/movie/{movie_id}/reviews?api_key=<<api_key>>&language=en-US&page=1
   const request_url = `${BASE_URL}movie/${movieID}/reviews?api_key=${API_KEY}&language=en-US&page=${page}`;
 
   const fetchResponse = await fetch(request_url);
