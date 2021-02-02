@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import styles from './SearchForm.module.css';
+import { useLocation, useHistory } from 'react-router-dom';
 
-export default function SearchForm({ handleSubmit }) {
+export default function SearchForm() {
   const [searchString, setSearchString] = useState('');
+  const history = useHistory();
+  const location = useLocation();
 
   const handleChange = e => {
     setSearchString(e.currentTarget.value);
@@ -13,7 +16,11 @@ export default function SearchForm({ handleSubmit }) {
     if (!searchString.trim()) {
       return;
     }
-    handleSubmit(searchString.trim());
+
+    history.push({
+      ...location,
+      search: `search-movies=${searchString.trim()}`,
+    });
     setSearchString('');
   };
 

@@ -6,20 +6,17 @@ import { Switch, Route } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 
 import AppBar from './components/AppBar';
-//import HomePage from './components/HomePage';
-//import Movies from './components/Movies';
-//import MoviesDetailsPage from './components/MovieDetailsPage';
 
 const HomePage = lazy(
-  () => import('./components/HomePage') /* webpackChunkName: "HomePage" */,
+  () => import('./Views/HomePage') /* webpackChunkName: "HomePage" */,
 );
 const Movies = lazy(
-  () => import('./components/Movies') /* webpackChunkName: "Movies" */,
+  () => import('./Views/Movies') /* webpackChunkName: "Movies" */,
 );
 const MoviesDetailsPage = lazy(
   () =>
     import(
-      './components/MovieDetailsPage'
+      './Views/MovieDetailsPage'
     ) /*webpackChunkName: "MoviesDetailsPage"*/,
 );
 
@@ -32,7 +29,7 @@ const MoviesDetailsPage = lazy(
 function App() {
   return (
     <div className="App">
-      <AppBar></AppBar>
+      <AppBar />
       <Suspense fallback={<Loader type="Puff" />}>
         <Switch>
           <Route path="/" exact>

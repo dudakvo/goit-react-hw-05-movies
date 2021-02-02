@@ -5,7 +5,7 @@ const API_KEY = 'f76df85c86f4c3253e784768d1d2b67c';
 const BASE_URL = 'https://api.themoviedb.org/3/';
 const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w500/';
 
-function getmovieObject(resultJSON) {
+async function getmovieObject(resultJSON) {
   const filmArray = resultJSON.results.map(film => ({
     id: film.id,
     genre: getNamesGenre(film.genre_ids),
@@ -15,28 +15,10 @@ function getmovieObject(resultJSON) {
       ? `${IMG_BASE_URL}${film.poster_path}`
       : 'not found',
   }));
-
-  // const returnObject = {
-  //   totalPages: resultJSON.total_pages,
-  //   movies: filmArray,
-  // };
   return {
     totalPages: resultJSON.total_pages,
     movies: filmArray,
   };
-}
-
-export async function getTrendinMovies(page = 1) {
-  const request_url = `${BASE_URL}trending/all/day?api_key=${API_KEY}&page=${page}`;
-  const fetchResponse = await fetch(request_url);
-  if (fetchResponse.status !== 200) {
-    throw new Error(
-      `Некоректний результат запиту status code: ${fetchResponse.status}`,
-    );
-  }
-  const movieJSON = await fetchResponse.json();
-
-  return getmovieObject(movieJSON);
 }
 
 export async function getNamesGenre(genreIDArray) {
@@ -61,6 +43,19 @@ export async function getNamesGenre(genreIDArray) {
     return genreObject ? genreObject.name : null;
   });
   return genreNames;
+}
+
+export async function getTrendinMovies(page = 1) {
+  const request_url = `${BASE_URL}trending/all/day?api_key=${API_KEY}&page=${page}`;
+  const fetchResponse = await fetch(request_url);
+  if (fetchResponse.status !== 200) {
+    throw new Error(
+      `Некоректний результат запиту status code: ${fetchResponse.status}`,
+    );
+  }
+  const movieJSON = await fetchResponse.json();
+
+  return getmovieObject(movieJSON);
 }
 
 export async function movieSearchByQuery(queryString, page = 1) {
