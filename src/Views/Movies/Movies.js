@@ -1,20 +1,25 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { movieSearchByQuery } from '../../services/movie-api';
-import MoviesList from '../MoviesList';
-import SearchForm from '../SearchForm/SearchForm';
+import MoviesList from '../../components/MoviesList';
+import SearchForm from '../../components/SearchForm';
 
 export default function Movies() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
 
+  const location = useLocation();
+
   useEffect(() => {
-    if (searchQuery === '') {
+    setSearchQuery(new URLSearchParams(location.search).get('search-movies'));
+    if (!searchQuery) {
       return;
     }
+
     setCurrentPage(1);
     const moviePromise = movieSearchByQuery(searchQuery);
     moviePromise
@@ -23,7 +28,7 @@ export default function Movies() {
         setTotalPages(moviesObj.totalPages);
       })
       .catch(error => setError(error));
-  }, [searchQuery]);
+  }, [location, searchQuery]);
 
   useEffect(() => {
     if (currentPage === 1) {
@@ -45,7 +50,7 @@ export default function Movies() {
   return (
     <>
       <h1>Movies page</h1>
-      <SearchForm handleSubmit={setSearchQuery} />
+      <SearchForm />
       <MoviesList
         onPageChange={setCurrentPage}
         pages={{ currentPage: currentPage, totalPages: totalPages }}

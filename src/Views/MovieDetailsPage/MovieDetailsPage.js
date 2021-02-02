@@ -1,5 +1,6 @@
 import { useParams, NavLink, Route, useRouteMatch } from 'react-router-dom';
 import { useState, useEffect, lazy, Suspense } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 
 import notFoundIMG from '../../img/notFound.jpg';
@@ -10,9 +11,11 @@ import { getMovieByID } from '../../services/movie-api';
 import s from './MovieDetailsPage.module.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
-const Cast = lazy(() => import('../Cast') /* webpackChunkName: "Cast" */);
+const Cast = lazy(
+  () => import('../../components/Cast') /* webpackChunkName: "Cast" */,
+);
 const Reviews = lazy(
-  () => import('../Reviews') /* webpackChunkName: "Reviews" */,
+  () => import('../../components/Reviews') /* webpackChunkName: "Reviews" */,
 );
 
 export default function MovieDetailsPage() {
@@ -20,6 +23,11 @@ export default function MovieDetailsPage() {
   const [movieDetails, setMovieDetails] = useState();
   const { url, path } = useRouteMatch();
   const [error, setError] = useState(null);
+  const location = useLocation;
+  const history = useHistory;
+
+  console.log('location', location());
+  console.log('history', history());
 
   useEffect(() => {
     getMovieByID(movieID)
@@ -85,7 +93,11 @@ export default function MovieDetailsPage() {
               </NavLink>
             </li>
           </ul>
+          <button type="button" onClick={e => history.goBack()}>
+            назад
+          </button>
         </div>
+
         <div className={s.movie_details}>
           <Suspense fallback={<Loader type="Puff" />}>
             <Route path={`${path}/cast`} exact>

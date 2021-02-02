@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { getTrendinMovies } from '../../services/movie-api';
-import MoviesList from '../MoviesList';
+import MoviesList from '../../components/MoviesList';
 
 export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
