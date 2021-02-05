@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import styles from './SearchForm.module.css';
 import { useLocation, useHistory } from 'react-router-dom';
+import queryString from 'query-string';
+
+//const queryString = require('query-string');
 
 export default function SearchForm() {
   const [searchString, setSearchString] = useState('');
@@ -17,9 +20,14 @@ export default function SearchForm() {
       return;
     }
 
+    const searchQuery = queryString.stringify({
+      [`search-movies`]: `${searchString.trim()}`,
+      page: 1,
+    });
+
     history.push({
       ...location,
-      search: `search-movies=${searchString.trim()}`,
+      search: searchQuery,
     });
     setSearchString('');
   };

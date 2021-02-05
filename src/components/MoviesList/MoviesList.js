@@ -1,13 +1,15 @@
 import { Link, useRouteMatch } from 'react-router-dom';
 import Pagination from 'react-pagination-library';
+import { useLocation } from 'react-router-dom';
 
 import MovieCard from '../MovieCard';
 
 import 'react-pagination-library/build/css/index.css';
 import styles from './MoviesList.module.css';
 
-export default function MoviesList({ movies, pages, onPageChange }) {
-  //const [error, setError] = useState('null');
+function MoviesList({ movies, pages, onPageChange }) {
+  const location = useLocation();
+
   const { url } = useRouteMatch();
 
   return (
@@ -23,7 +25,12 @@ export default function MoviesList({ movies, pages, onPageChange }) {
           } = movie;
           return (
             <li key={id}>
-              <Link to={url === '/' ? `${url}movies/${id}` : `${url}/${id}`}>
+              <Link
+                to={{
+                  pathname: url === '/' ? `${url}movies/${id}` : `${url}/${id}`,
+                  state: { from: location },
+                }}
+              >
                 <MovieCard
                   movieName={title}
                   movieIMG={posterPath}
@@ -47,3 +54,5 @@ export default function MoviesList({ movies, pages, onPageChange }) {
     </>
   );
 }
+
+export default MoviesList;

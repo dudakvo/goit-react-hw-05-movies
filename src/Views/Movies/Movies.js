@@ -1,48 +1,52 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import { movieSearchByQuery } from '../../services/movie-api';
 import MoviesList from '../../components/MoviesList';
 import SearchForm from '../../components/SearchForm';
 
 export default function Movies() {
-  const [searchQuery, setSearchQuery] = useState();
-  const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
+  const history = useHistory();
+
+  const [currentPage, setCurrentPage] = useState(
+    () => new URLSearchParams(location.search).get('page') ?? 1,
+  );
+
   const [totalPages, setTotalPages] = useState(1);
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
 
-  const location = useLocation();
-
   useEffect(() => {
-    setSearchQuery(new URLSearchParams(location.search).get('search-movies'));
-    if (!searchQuery) {
+    const searchParam = new URLSearchParams(location.search);
+    const searchURL = searchParam.get('search-movies');
+    const page = searchParam.get('page');
+    setCurrentPage(page);
+
+    if (!searchURL) {
       return;
     }
 
-    setCurrentPage(1);
-    const moviePromise = movieSearchByQuery(searchQuery);
+    setCurrentPage(Number(page));
+
+    const moviePromise = movieSearchByQuery(searchURL, page);
     moviePromise
       .then(moviesObj => {
         setMovies(moviesObj.movies);
         setTotalPages(moviesObj.totalPages);
       })
       .catch(error => setError(error));
-  }, [location, searchQuery]);
+  }, [location]);
 
-  useEffect(() => {
-    if (currentPage === 1) {
-      return;
-    }
-    const moviePromise = movieSearchByQuery(searchQuery, currentPage);
-    moviePromise
-      .then(moviesObj => {
-        setMovies(moviesObj.movies);
-        setTotalPages(moviesObj.totalPages);
-      })
-      .catch(error => setError(error));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  function pageChange(page) {
+    setCurrentPage(page);
+    const searchParam = new URLSearchParams(location.search);
+    searchParam.set('page', page);
+    history.push({
+      ...location,
+      search: searchParam.toString(),
+    });
+  }
 
   if (error) {
     return <h1>error.message</h1>;
@@ -52,7 +56,7 @@ export default function Movies() {
       <h1>Movies page</h1>
       <SearchForm />
       <MoviesList
-        onPageChange={setCurrentPage}
+        onPageChange={pageChange}
         pages={{ currentPage: currentPage, totalPages: totalPages }}
         movies={movies}
       />

@@ -1,12 +1,17 @@
-import { useParams, NavLink, Route, useRouteMatch } from 'react-router-dom';
+import {
+  useParams,
+  NavLink,
+  Route,
+  useRouteMatch,
+  Link,
+} from 'react-router-dom';
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
+import queryString from 'query-string';
 
 import notFoundIMG from '../../img/notFound.jpg';
 import { getMovieByID } from '../../services/movie-api';
-//import Cast from '../Cast';
-//import Reviews from '../Reviews';
 
 import s from './MovieDetailsPage.module.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
@@ -23,11 +28,7 @@ export default function MovieDetailsPage() {
   const [movieDetails, setMovieDetails] = useState();
   const { url, path } = useRouteMatch();
   const [error, setError] = useState(null);
-  const location = useLocation;
-  const history = useHistory;
-
-  console.log('location', location());
-  console.log('history', history());
+  const location = useLocation();
 
   useEffect(() => {
     getMovieByID(movieID)
@@ -50,6 +51,7 @@ export default function MovieDetailsPage() {
       overview,
       vote,
     } = movieDetails;
+
     return (
       <div className={s.detailsContainer}>
         <div className={s.movie_details}>
@@ -75,8 +77,22 @@ export default function MovieDetailsPage() {
           <p>{overview}</p>
           <ul className={s.nav}>
             <li>
+              <Link
+                className={s.link}
+                to={{
+                  pathname: location?.state?.from?.pathname ?? '/',
+                  search: location?.state?.from?.search ?? '/',
+                }}
+              >
+                Back
+              </Link>
+            </li>
+            <li>
               <NavLink
-                to={`${url}/cast`}
+                to={{
+                  pathname: `${url}/cast`,
+                  state: { from: location?.state?.from ?? '/' },
+                }}
                 className={s.link}
                 activeClassName={s.activeLink}
               >
@@ -85,7 +101,10 @@ export default function MovieDetailsPage() {
             </li>
             <li>
               <NavLink
-                to={`${url}/reviews`}
+                to={{
+                  pathname: `${url}/reviews`,
+                  state: { from: location?.state?.from ?? '/' },
+                }}
                 className={s.link}
                 activeClassName={s.activeLink}
               >
@@ -93,9 +112,6 @@ export default function MovieDetailsPage() {
               </NavLink>
             </li>
           </ul>
-          <button type="button" onClick={e => history.goBack()}>
-            назад
-          </button>
         </div>
 
         <div className={s.movie_details}>
