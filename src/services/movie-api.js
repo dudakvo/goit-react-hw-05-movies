@@ -46,6 +46,7 @@ export async function getNamesGenre(genreIDArray) {
 
 export async function getTrendinMovies(page = 1) {
   const request_url = `${BASE_URL}trending/all/day?api_key=${API_KEY}&page=${page}`;
+
   const fetchResponse = await fetch(request_url);
   if (fetchResponse.status !== 200) {
     throw new Error(

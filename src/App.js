@@ -2,7 +2,7 @@ import './App.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 import { lazy, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 
 import AppBar from './components/AppBar';
@@ -42,7 +42,7 @@ function App() {
             <MoviesDetailsPage />
           </Route>
           <Route>
-            <HomePage />
+            <Redirect to="/" />
           </Route>
         </Switch>
       </Suspense>

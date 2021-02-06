@@ -51,6 +51,7 @@ export default function Movies() {
   if (error) {
     return <h1>error.message</h1>;
   }
+
   return (
     <>
       <h1>Movies page</h1>
